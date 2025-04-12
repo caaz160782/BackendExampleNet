@@ -5,6 +5,7 @@ using Backend.Services;
 using Backend.Validators;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,11 @@ builder.Services.AddKeyedScoped<IRandomService, RandomService>("randomScoped");
 builder.Services.AddKeyedTransient<IRandomService, RandomService>("randomTransient");
 
 builder.Services.AddScoped<IPostsService, PostsService>();
+
+//services beer
+builder.Services.AddKeyedScoped<ICommonService<BeerDto, BeerInsertDto, BeerUpdateDto>, BeerService>("beerService");
+
+// url json
 builder.Services.AddHttpClient<IPostsService, PostsService>(c =>
 {
     c.BaseAddress = new Uri(builder.Configuration["BaseUrlPosts"]);
