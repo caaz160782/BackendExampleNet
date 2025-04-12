@@ -1,5 +1,6 @@
 ﻿using Backend.DTOs;
 using Backend.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,17 +12,17 @@ namespace Backend.Controllers
     public class BeerController : ControllerBase
     {
         private StoreContext _context;
-        /*private IValidator<BeerInsertDto> _beerInsertValidator;
-        private IValidator<BeerUpdateDto> _beerUpdateValidator;*/
+        private IValidator<BeerInsertDto> _beerInsertValidator;
+        private IValidator<BeerUpdateDto> _beerUpdateValidator;
 
-        public BeerController(StoreContext context
-           /*   IValidator<BeerInsertDto> beerInsertValidator,
-            IValidator<BeerUpdateDto> beerUpdateValidator*/
+        public BeerController(StoreContext context,
+            IValidator<BeerInsertDto> beerInsertValidator,
+            IValidator<BeerUpdateDto> beerUpdateValidator
            )
         {
             _context = context;
-         /*   _beerInsertValidator = beerInsertValidator;
-            _beerUpdateValidator = beerUpdateValidator;*/
+            _beerInsertValidator = beerInsertValidator;
+            _beerUpdateValidator = beerUpdateValidator;
         }
 
         [HttpGet]
@@ -59,12 +60,12 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<ActionResult<BeerDto>> Add(BeerInsertDto beerInsertDto)
         {
-          /*  var validationResult = await _beerInsertValidator.ValidateAsync(beerInsertDto);
+           var validationResult = await _beerInsertValidator.ValidateAsync(beerInsertDto);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
-            }*/
+            }
 
             var beer = new Beer()
             {
@@ -90,11 +91,11 @@ namespace Backend.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<BeerDto>> Update(int id, BeerUpdateDto beerUpdateDto)
         {
-            /*var validationResult = await _beerUpdateValidator.ValidateAsync(beerUpdateDto);
+            var validationResult = await _beerUpdateValidator.ValidateAsync(beerUpdateDto);
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
-            }*/
+            }
 
             var beer = await _context.Beers.FindAsync(id);
 
