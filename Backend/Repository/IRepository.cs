@@ -8,5 +8,6 @@
         void Update(IEntity entity);
         void Delete(IEntity entity);
         Task Save();
+        IEnumerable<IEntity> Search(Func<IEntity, bool> filter);
     }
 }

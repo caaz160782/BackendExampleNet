@@ -3,21 +3,24 @@ using Backend.DTOs;
 using Backend.Models;
 using Backend.Repository;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Backend.Services
 {
     public class BeerService : ICommonService<BeerDto, BeerInsertDto, BeerUpdateDto>
     {
-        
         private IRepository<Beer> _beerRepository;
         private IMapper _mapper;
+
+        public List<string> Errors { get; }
         public BeerService(
              IRepository<Beer> beerRepository,
-             IMapper mapper
+             IMapper mapper           
             )
         {
            _beerRepository = beerRepository;
             _mapper = mapper;
+            Errors = new List<string>();
         }
 
         public async Task<IEnumerable<BeerDto>> Get() 
@@ -83,6 +86,25 @@ namespace Backend.Services
 
             return beerDto;
         }
+        public bool Validate(BeerInsertDto beerInsertDto)
+        {
+            if(_beerRepository.Search(b => b.BeerName == beerInsertDto.Name).Count() > 0 )
+            {
+                Errors.Add("No puede existir una cerveza con un nombre ya existente");
+                return false;
+            }
+            return true;
+        }
 
+        public bool Validate(BeerUpdateDto beerUpdateDto)
+        {
+            if (_beerRepository.Search(b => b.BeerName == beerUpdateDto.Name
+               && beerUpdateDto.Id != b.BeerID).Count() > 0)
+            {
+                Errors.Add("No puede existir una cerveza con un nombre ya existente");
+                return false;
+            }
+            return true;
+        }
     }
 }
