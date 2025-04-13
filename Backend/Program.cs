@@ -1,6 +1,7 @@
 // jsonplaceholder.typicode.com
 using Backend.DTOs;
 using Backend.Models;
+using Backend.Repository;
 using Backend.Services;
 using Backend.Validators;
 using FluentValidation;
@@ -22,7 +23,8 @@ builder.Services.AddScoped<IPostsService, PostsService>();
 
 //services beer
 builder.Services.AddKeyedScoped<ICommonService<BeerDto, BeerInsertDto, BeerUpdateDto>, BeerService>("beerService");
-
+//services repository
+builder.Services.AddScoped<IRepository<Beer>, BeerRepository >();
 // url json
 builder.Services.AddHttpClient<IPostsService, PostsService>(c =>
 {
